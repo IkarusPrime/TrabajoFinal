@@ -40,85 +40,89 @@ var cardsArray = [{
 
 var gameGrid = cardsArray.concat(cardsArray).sort(function () {
   return 0.5 - Math.random();
-});
+});//aleatoriza la posición de las cartas
 
-var firstGuess = '';
-var secondGuess = '';
-var count = 0;
-var previousTarget = null;
-var delay = 1200;
+//definición de variables importantes
+var firstGuess = '';//definicion de la variable para la primera carta seleccionada
+var secondGuess = '';//definicion de la variable para la segunda carta seleccionada
+var count = 0;//contador para la comparación
+var previousTarget = null;//indica si ha carta en status selected
+var delay = 1200;//
 
-var game = document.getElementById('game');
-var grid = document.createElement('section');
-grid.setAttribute('class', 'grid');
-game.appendChild(grid);
+var game = document.getElementById('game');//indica el div tablero
+var grid = document.createElement('section');//crea el elemento para mostrar las cartas
+grid.setAttribute('class', 'grid');//indica que grid es un objeto
+game.appendChild(grid);//introduce las cartas en el div del tablero
 
 gameGrid.forEach(function (item) {
-  var name = item.name,
-      img = item.img;
+  var name = item.name,//guarda el nombre
+      img = item.img;//guarda la foto
 
 
-  var card = document.createElement('div');
-  card.classList.add('card');
-  card.dataset.name = name;
+  var card = document.createElement('div');//crea el espacio donda se vera la carta
+  card.classList.add('card');//crea la carta
+  card.dataset.name = name;//pone el nombre a la carta
 
-  var front = document.createElement('div');
-  front.classList.add('front');
+  var front = document.createElement('div');//crea el espacio para el dorso de la carta
+  front.classList.add('front');//crea el dorso de la carta
 
-  var back = document.createElement('div');
-  back.classList.add('back');
-  back.style.backgroundImage = 'url(' + img + ')';
+  var back = document.createElement('div');//crea el espacio para el reverso de la carta
+  back.classList.add('back');//crea el reverso de la carta
+  back.style.backgroundImage = 'url(' + img + ')';//assigna la foto al reverso
 
-  grid.appendChild(card);
-  card.appendChild(front);
-  card.appendChild(back);
+  grid.appendChild(card);//introduce la carta en el objeto
+  card.appendChild(front);//introduce la imagen en la cara de la carta
+  card.appendChild(back);//introduce la foto del dorso de la carta
 });
 
-var match = function match() {
+var match = function match() {//pareja correcta
   var selected = document.querySelectorAll('.selected');
-  selected.forEach(function (card) {
+  selected.forEach(function (card) {//si la pareja es correcta se le pone el status match para que no se puede seleccionar otra vez
     card.classList.add('match');
   });
 };
 
-var resetGuesses = function resetGuesses() {
+var resetGuesses = function resetGuesses() {//resetea las variables de las cartas
   firstGuess = '';
   secondGuess = '';
   count = 0;
   previousTarget = null;
 
   var selected = document.querySelectorAll('.selected');
-  selected.forEach(function (card) {
+  selected.forEach(function (card) {//si la pareja no es correcta borra el status selected de las cartas
     card.classList.remove('selected');
   });
 };
 
-grid.addEventListener('click', function (event) {
+grid.addEventListener('click', function (event) {//se ejecuta al girar una carta
 
-  var clicked = event.target;
+  var clicked = event.target;//se guarda la carta seleccionada
 
-  if (clicked.nodeName === 'SECTION' || clicked === previousTarget || clicked.parentNode.classList.contains('selected') || clicked.parentNode.classList.contains('match')) {
-    return;
+  if (clicked.nodeName === 'SECTION' ||//no cartas seleccionadas
+      clicked === previousTarget || //previous target no es null
+      clicked.parentNode.classList.contains('selected') || //si ha carta selected
+      clicked.parentNode.classList.contains('match')) {//si hay pareja correcta
+    return;//reseta la comparación
   }
 
-  if (count < 2) {
+  if (count < 2) {//comparación de cartas
     count++;
-    if (count === 1) {
-      firstGuess = clicked.parentNode.dataset.name;
+    if (count === 1) {//primera carta
+      firstGuess = clicked.parentNode.dataset.name;//guarda el nombre
       console.log(firstGuess);
-      clicked.parentNode.classList.add('selected');
-    } else {
-      secondGuess = clicked.parentNode.dataset.name;
+      clicked.parentNode.classList.add('selected');//dice que hay carta selected
+    } else {//segunda carta
+      secondGuess = clicked.parentNode.dataset.name;//guarda el nombre
       console.log(secondGuess);
-      clicked.parentNode.classList.add('selected');
+      clicked.parentNode.classList.add('selected');//status selected
     }
 
-    if (firstGuess && secondGuess) {
-      if (firstGuess === secondGuess) {
-        setTimeout(match, delay);
+    if (firstGuess && secondGuess) {//comparación para match
+      if (firstGuess === secondGuess) {//hay match
+        setTimeout(match, delay);//desaparecen las cartas
       }
-      setTimeout(resetGuesses, delay);
+      setTimeout(resetGuesses, delay);//resetea las cartas
     }
-    previousTarget = clicked;
+    previousTarget = clicked;//indica que hay una carta selected 
   }
 });
