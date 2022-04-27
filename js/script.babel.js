@@ -117,7 +117,7 @@ grid.addEventListener('click', function (event) {//se ejecuta al girar una carta
       clicked.parentNode.classList.add('selected');//status selected
     }
 
-    if (firstGuess && secondGuess) {//comparación para match
+    if (firstGuess && secondGuess) {//comparación para matc
       if (firstGuess === secondGuess) {//hay match
         setTimeout(match, delay);//desaparecen las cartas
       }
